@@ -22,6 +22,13 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
     };
   }, [project, onClose]);
 
+  const [imageFailed, setImageFailed] = React.useState(false);
+
+  // Reset error when project changes
+  React.useEffect(() => {
+    setImageFailed(false);
+  }, [project?.id]);
+
   if (!project) return null;
 
   return (
@@ -53,13 +60,14 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
           {project.tagline}
         </p>
 
-        {/* Media Preview if image exists */}
-        {project.image && (
+        {/* Media Preview if image exists and has not failed */}
+        {project.image && !imageFailed && (
           <div className="mb-6 rounded-xl overflow-hidden border border-[#222436] bg-[#161724] aspect-[16/9] w-full">
             <img
               src={project.image}
               alt={`${project.title} Interface Preview`}
               referrerPolicy="no-referrer"
+              onError={() => setImageFailed(true)}
               className="w-full h-full object-cover"
             />
           </div>

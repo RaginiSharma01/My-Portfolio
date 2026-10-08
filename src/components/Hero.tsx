@@ -203,6 +203,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenResume, onOpenContact, onShowT
                   alt="Portrait of Ragini Sharma, Software Engineer"
                   referrerPolicy="no-referrer"
                   onLoad={() => setImageLoaded(true)}
+                  onError={() => setImageLoaded(false)}
                   className={`w-full h-full object-cover transition-opacity duration-500 ${
                     imageLoaded ? 'opacity-100' : 'opacity-0'
                   }`}

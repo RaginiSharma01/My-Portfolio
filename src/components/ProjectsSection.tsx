@@ -32,6 +32,8 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ onSelectProjec
     });
   }, [activeCategory, searchQuery]);
 
+  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
+
   return (
     <section id="projects" className="py-24 border-b border-[#1E202B]">
       <div className="max-w-7xl mx-auto px-6">
@@ -108,7 +110,9 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ onSelectProjec
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProjects.map((project) => (
+            {filteredProjects.map((project) => {
+              const hasValidImage = project.image && !failedImages[project.id];
+              return (
               <div
                 key={project.id}
                 className="group flex flex-col bg-[#10111A] hover:bg-[#131420] border border-[#202230] hover:border-[#2C2E42] rounded-2xl overflow-hidden transition-all duration-200"
@@ -118,11 +122,14 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ onSelectProjec
                   className="relative aspect-[16/10] w-full bg-[#161725] overflow-hidden border-b border-[#202230] cursor-pointer"
                   onClick={() => onSelectProject(project)}
                 >
-                  {project.image ? (
+                  {hasValidImage ? (
                     <img
                       src={project.image}
                       alt={project.title}
                       referrerPolicy="no-referrer"
+                      onError={() =>
+                        setFailedImages((prev) => ({ ...prev, [project.id]: true }))
+                      }
                       className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
                     />
                   ) : (
@@ -237,7 +244,8 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ onSelectProjec
                   </div>
                 </div>
               </div>
-            ))}
+            );
+          })}
           </div>
         )}
       </div>
